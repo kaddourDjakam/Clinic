@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
               xmlns:textChanged="clr-namespace:Clinik.ViewModel.textbox_changed"
              xmlns:local="clr-namespace:Clinik.View.Rendez_vous.NewAppoinmtment"
              xmlns:percentageConverter="clr-namespace:Clinik.Helpers" 
@@ -55,17 +56,20 @@
             </Border.Effect>
             <Grid x:Name="popupuser">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
                     <RowDefinition Height="30"/>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="{Binding ElementName=popupuser, Path=ActualHeight, Converter={StaticResource PercentageConverter}, ConverterParameter=0.20}"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="25"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Row="0">Nouvelle réservation</Label>
@@ -73,18 +77,18 @@
                 <TextBlock Grid.Row="2" Text="{Binding ApointmentNum}"/>
                 <Label Grid.Row="3">Descriptif de la réservation</Label>
 
-                <TextBox  Grid.Row="4" Text="{Binding Description}" HorizontalAlignment="Left"
+                <TextBox Padding="0" Margin="0" Grid.Row="4" Text="{Binding Description}" HorizontalAlignment="Left"
                           AcceptsReturn="True"
-                            TextWrapping="Wrap"
+                         TextWrapping="Wrap"
                          Background="#EAEAEA"
                          TextAlignment="Center" Style="{StaticResource newRounded}" 
                             
                          Width="{Binding ElementName=popupuser, Path=ActualWidth, Converter={StaticResource PercentageConverter}, ConverterParameter=0.45}" 
-                          Height="{Binding ElementName=popupuser, Path=ActualHeight, Converter={StaticResource PercentageConverter}, ConverterParameter=0.20}"
+                          Height="{Binding ElementName=popupuser, Path=ActualHeight, Converter={StaticResource PercentageConverter}, ConverterParameter=0.10}"
                           Tag=""
                           />
 
-                <Grid Grid.Row="5" Margin="0 20 0 0" HorizontalAlignment="Left">
+                <Grid Grid.Row="5" Margin="0 0 0 0" HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -123,7 +127,7 @@
                     <ContentControl Content="{Binding CurrentViewModel}" />
 
                 </Grid>
-                <Grid  Grid.Row="7" Margin="0 20 0 0">
+                <Grid  Grid.Row="7" Margin="0 0  0 0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -131,7 +135,7 @@
                     <Label Grid.Column="0">Selected Date</Label>
                     <Label Grid.Column="1" Content="{Binding SelectedDate, StringFormat='dd MMMM yyyy'}"></Label>
                 </Grid>
-                <Grid Grid.Row="7" Margin="0 5">
+                <Grid Grid.Row="9" Margin="0 5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -139,21 +143,30 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="1"  Content="Annuler" Command="{Binding }"/>
+                    <Button Grid.Column="1"  Content="Annuler" Command="{Binding CloseNewAppointment }"/>
                     <Button Grid.Column="3"  Content="Confirmer"  Command="{Binding SubmitAppointment }"/>
                 </Grid>
-                <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="8">
+                <Grid Grid.Column="2" Grid.Row="0" Grid.RowSpan="10" Margin="0" >
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Content="Previous" Command="{Binding MoveToPreviousMonthCommand}" />
+                        <Button Margin="15 0"   Command="{Binding MoveToPreviousMonthCommand}"
+                                 materialDesign:ButtonAssist.CornerRadius="8">
+                            <materialDesign:PackIcon Kind="NavigateBefore" Width="20" Height="20"/>
+                        </Button>
                         <TextBlock Text="{Binding CurrentMonth, StringFormat='MMMM yyyy'}" 
+                                   FontSize="18"
+                                   FontWeight="DemiBold"
                                    VerticalAlignment="Center" />
-                        <Button Content="Next" Command="{Binding MoveToNextMonthCommand}" />
+                        <Button Margin="15 0"  Command="{Binding MoveToNextMonthCommand}" materialDesign:ButtonAssist.CornerRadius="8"  >
+                            <materialDesign:PackIcon Kind="NavigateNext" Width="20" Height="20"/>
+                        </Button>
                     </StackPanel>
-                    <ItemsControl Grid.Row="1" ItemsSource="{Binding Days}">
+                    <ItemsControl Grid.Row="2" ItemsSource="{Binding Days}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel Orientation="Horizontal" />
@@ -161,9 +174,30 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Button Content="{Binding Date.Day}" Width="80" Height="60" Margin="5"
-                    Command="{Binding DayClickCommand}"
-                    IsEnabled="{Binding IsEnabled}" />
+                                <!--<Button Content="{Binding Date.Day}" Width="80" Height="60" Margin="5"
+                                            Command="{Binding DayClickCommand}"
+                                            IsEnabled="{Binding IsEnabled}" >
+                                    
+                                </Button>-->
+                                <Button  materialDesign:ButtonAssist.CornerRadius="8" Background="White"
+                                         Padding="0" Margin="2"
+                                          Width="55" Height="70"
+                                         Command="{Binding DayClickCommand}"
+                                         IsEnabled="{Binding IsEnabled}" >
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition Height="auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Label Grid.Row="0" Content="{Binding Date.Day}"
+                                           FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <Label Grid.Row="1" FontSize="12" 
+                                               HorizontalAlignment="Center"
+                                               Content="{Binding Appointmentnumber}" 
+                                               ></Label>
+                                    </Grid>
+                                </Button>
+                               
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>

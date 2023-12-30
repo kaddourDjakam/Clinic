@@ -114,7 +114,8 @@ namespace Clinik.ViewModel.Rendez_vous
         public ICommand OpenPatientLIstView { get; set; }
         public ICommand OpenNewPatientView { get; set; }
         public ICommand SubmitAppointment { get; set; }
-
+        public ICommand CloseNewAppointment { get; set; }
+        
 
         public Rendez_vousViewModel()
         {
@@ -137,6 +138,7 @@ namespace Clinik.ViewModel.Rendez_vous
             OpenPatientLIstView = new RelayCommand(OpenPatientLIstViewFun);
 
             SubmitAppointment = new RelayCommand(SubmitAppointmentFunc);
+            CloseNewAppointment = new RelayCommand(CloseNewAppointmentFunc);
 
 
             NewPatientViewViewModel = new NewPatientViewModel();
@@ -169,7 +171,7 @@ namespace Clinik.ViewModel.Rendez_vous
             set { _Description = value;OnPropertyChanged(nameof(Description)); }
         }
 
-        async void SubmitAppointmentFunc()
+         void SubmitAppointmentFunc()
         {
             var patienInfo = ((CurrentViewModel as NewPatientView).DataContext as NewPatientViewModel);
             
@@ -204,6 +206,10 @@ namespace Clinik.ViewModel.Rendez_vous
             }
         }
 
+        void CloseNewAppointmentFunc()
+        {
+            IsNewAppointmentOpen = false;
+        }
 
         void NewAppointment()
         {
@@ -212,6 +218,8 @@ namespace Clinik.ViewModel.Rendez_vous
         private void MoveToNextMonth()
         {
             CurrentMonth = CurrentMonth.AddMonths(1);
+           
+            
         }
 
         private void MoveToPreviousMonth()
@@ -269,13 +277,30 @@ namespace Clinik.ViewModel.Rendez_vous
 
         public DateTime Date { get; }
 
+        private int _Appointmentnumber;
+
+        public int Appointmentnumber
+        {
+            get { return _Appointmentnumber; }
+            set { _Appointmentnumber = value; OnPropertyChanged(nameof(Appointmentnumber)); }
+        }
+
+
+
         public ICommand DayClickCommand { get; }
+
+
 
         public bool IsEnabled => true; // You can implement your logic here
 
         public DayViewModel(DateTime date, Action<DateTime> dayClickHandler)
         {
-            Date = date;
+            using (var contextDb = new ClinikEntities()) 
+            {
+                var sum = contextDb.Appointments.Where(x => x.Date == date).ToList();
+                Appointmentnumber = sum.Count;
+            }
+                Date = date;
             this.dayClickHandler = dayClickHandler;
             DayClickCommand = new RelayCommand(OnDayClick, () => IsEnabled);
         }
