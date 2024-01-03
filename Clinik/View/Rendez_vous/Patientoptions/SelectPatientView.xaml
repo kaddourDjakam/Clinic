@@ -1,0 +1,114 @@
+﻿<UserControl x:Class="Clinik.View.Rendez_vous.Patientoptions.SelectPatientView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:Clinik.View.Rendez_vous.Patientoptions"
+             xmlns:textChanged="clr-namespace:Clinik.ViewModel.textbox_changed"
+               xmlns:percentageConverter="clr-namespace:Clinik.Helpers" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <percentageConverter:PercentageConverter x:Key="PercentageConverter"/>
+        <!-- Custom TextBox Style with rounded corners -->
+        <Style TargetType="TextBox" x:Key="newRounded" BasedOn="{StaticResource CustmHintedTextBoxStyle}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="Border"
+                                    Background="{TemplateBinding Background}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="20" 
+                            Padding="5 6 0 0"
+                                    Margin="1"
+                                    SnapsToDevicePixels="True">
+                            <Grid>
+                                <TextBlock x:Name="HintTextBlock"
+                                               Text="{TemplateBinding Tag}"
+                                               Foreground="Gray"
+                                               Visibility="Collapsed"
+                                               Padding="0 1 0 0"
+                                               Margin="3,0,0,0" />
+                                <ScrollViewer x:Name="PART_ContentHost" />
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#673AB7" />
+                                <Setter TargetName="Border" Property="BorderThickness" Value="1.5" />
+                            </Trigger>
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="HintTextBlock" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+        <Border  Background="White" BorderThickness="3" BorderBrush="LightGray" CornerRadius="0" Padding="25" >
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="5" Color="Black" Opacity="0.1" BlurRadius="20"/>
+            </Border.Effect>
+            <Grid x:Name="selectPatienContainer">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" FontSize="18" FontWeight="DemiBold" >Sélectionnez le patient</Label>
+                <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0"   x:Name="barcodeTextBox"
+                         Text="{Binding Search_Bar ,UpdateSourceTrigger=PropertyChanged}"
+                         Background="#EAEAEA"
+                         TextAlignment="Center" Style="{StaticResource newRounded}" 
+                         textChanged:TextBoxChangedCmd.TextChangedCommand="{Binding SearchTextChangedCommand}"   
+                         Width="{Binding ElementName=selectPatienContainer, Path=ActualWidth, Converter={StaticResource PercentageConverter}, ConverterParameter=0.45}" Height="45"
+                         
+                         FontSize="18"
+                         Tag="Recherche"
+                         />    
+            </Grid>
+            <Border Grid.Row="2" Background="White" BorderThickness="3" BorderBrush="LightGray" CornerRadius="10" Padding="10" Margin="10 10 10 0">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="5" Color="Black" Opacity="0.1" BlurRadius="20"/>
+                </Border.Effect>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding Patients}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button materialDesign:ButtonAssist.CornerRadius="8" Background="White"
+                            Padding="0" Margin="2" Width="100" Height="90"
+                            Command="{Binding PersonClickCommand}" IsEnabled="{Binding IsEnabled}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition Height="auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Label Grid.Row="0" Content="{Binding PersonEnst.Fullname}" FontSize="12"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <Label Grid.Row="1" FontSize="12" HorizontalAlignment="Center"
+                                   Content="{Binding PersonEnst.Phone}"/>
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+        </Border>
+
+</UserControl>

@@ -1,9 +1,15 @@
 ﻿using Clinik.Commands;
+using Clinik.Model;
+using Clinik.Repository.DataContext;
 using Clinik.View.Rendez_vous;
 using Clinik.View.WorkSpace;
 using Clinik.ViewModel.Rendez_vous;
+using Clinik.ViewModel.WorkSpace;
+using Clinik.ViewModel.WorkSpace.Cards;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -94,8 +100,8 @@ namespace Clinik.ViewModel.MainWindow
             Appointment_Cmd = new RelayCommand(AppointmentClicked);
 
 
-            CurrentController = new WorkSpaceView() ;
-            CurrentHomePage = CurrentController as WorkSpaceView;
+            CurrentController = new WorkSpaceView() {DataContext = new WorkSpaceViewModel() };
+            CurrentHomePage = CurrentController as WorkSpaceView ;
 
         }
 
@@ -118,6 +124,16 @@ namespace Clinik.ViewModel.MainWindow
                     HomePage_IsEnabled = false;
                     HomePageBrdColor = DiabledColor;
                     CurrentController = CurrentHomePage;
+                    using (var contextDb = new ClinikEntities())
+                    {
+                        int count = 0;
+                        /*var appointments = contextDb.Appointments.Include(ap => ap.Patient).ThenInclude(p => p.Person).Where(ap => ap.Date.Date == DateTime.Now.Date).ToList()
+                            .Select((a, index) => new WaitingQViewModel(a.Patient.Person, a.Patient, a, index + 1));*/
+                       /* ((CurrentController as WorkSpaceView).DataContext as WorkSpaceViewModel).Appointments.Clear();
+                        ((CurrentController as WorkSpaceView).DataContext as WorkSpaceViewModel).Appointments = new System.Collections.ObjectModel.ObservableCollection<WorkSpace.Cards.WaitingQViewModel>(appointments);*/
+                        ((CurrentController as WorkSpaceView).DataContext as WorkSpaceViewModel).InitializeAppointmentsListView();
+                    }
+                   
                    /* using (var entityContext = new hardwareStoreEntities())
                     {
                         ((CurrentController as Home_Page).DataContext as HomePage_ViewModel).GetStockData(entityContext);

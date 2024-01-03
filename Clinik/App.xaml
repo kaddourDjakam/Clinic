@@ -4,7 +4,9 @@
              xmlns:local="clr-namespace:Clinik"
              StartupUri="/View/LoginView.xaml">
     <Application.Resources>
+
         <ResourceDictionary>
+           
         <Style TargetType="TextBox" x:Key="CustmHintedTextBoxStyle">
             <Setter Property="Width" Value="110" />
             <Setter Property="Height" Value="30" />
@@ -50,8 +52,9 @@
             </Setter>
         </Style>
 
-        <ResourceDictionary.MergedDictionaries>
-            <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+            <ResourceDictionary.MergedDictionaries>
+            
+             <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
             <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
             <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
             <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />

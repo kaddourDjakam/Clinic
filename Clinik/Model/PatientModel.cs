@@ -13,14 +13,22 @@ namespace Clinik.Model
     public class PatientModel
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [ForeignKey("Person")]
         public int ID { get; set; }
 
+        [StringLength(50)] // Adjust the maximum length as needed
         public string? Barcode { get; set; }
+
+        [Required]
         public DateTime Birthday { get; set; }
-        public Gender Gender { get; set; } // Assuming Gender is an enum
+
+        [Required]
+        public Gender Gender { get; set; }
 
         // ... other properties
+
+        // Navigation property
+        public virtual Person Person { get; set; }
 
         // Navigation properties
         public virtual ICollection<Appointment> Appointments { get; set; } = new HashSet<Appointment>();

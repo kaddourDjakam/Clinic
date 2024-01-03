@@ -17,6 +17,8 @@ namespace Clinik.Model
         public string? TreatmentName { get; set; }
 
         // Navigation properties
-        public virtual ICollection<Treatment> Treatments { get; set; } = new HashSet<Treatment>();
+        public virtual ICollection<Treatment> Treatments { get; set; } 
+            =
+            new HashSet<Treatment>();
     }
 }

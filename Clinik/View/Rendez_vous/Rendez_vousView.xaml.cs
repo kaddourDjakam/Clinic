@@ -26,7 +26,23 @@ namespace Clinik.View.Rendez_vous
             InitializeComponent();
           
         }
-}
+        private void OpenCalendar_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.calendarPopup.IsOpen)
+            {
+                calendarPopup.IsOpen = false;
+            }
+            else
+            {
+                calendarPopup.IsOpen = true;
+            }
+        }
+        private void Calendar_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Close the Popup when the date is changed
+            calendarPopup.IsOpen = false;
+        }
+    }
         
     
 }

@@ -92,7 +92,8 @@ namespace Clinik.ViewModel
 
                 if (CurrentUser != null)
                 {
-                    MainWindowView main = new MainWindowView() { DataContext = new MainWindowViewModel() };
+                    var datacontext = new MainWindowViewModel();
+                    MainWindowView main = new MainWindowView() { DataContext = datacontext };
                     Application.Current.MainWindow.Hide();
                     main.Show();
 

@@ -7,13 +7,16 @@
               xmlns:textChanged="clr-namespace:Clinik.ViewModel.textbox_changed"
              xmlns:local="clr-namespace:Clinik.View.Rendez_vous.NewAppoinmtment"
              xmlns:percentageConverter="clr-namespace:Clinik.Helpers" 
-             xmlns:patientLIstView="clr-namespace:Clinik.View.Rendez_vous.Patientoptions"
+             xmlns:selectPatientView="clr-namespace:Clinik.View.Rendez_vous.Patientoptions"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
         <percentageConverter:PercentageConverter x:Key="PercentageConverter"/>
+        <percentageConverter:AppointmentNumberConverter x:Key="AppointmentNumberConverter" />
+        
         <Style TargetType="TextBox" x:Key="newRounded" BasedOn="{StaticResource CustmHintedTextBoxStyle}">
+            
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
@@ -48,7 +51,7 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <Grid Background="Transparent">
+    <Grid Background="Transparent" x:Name="mainContainer">
         <Border Padding="35" Background="White" BorderThickness="3" BorderBrush="LightGray" Panel.ZIndex="-1" 
                  >
             <Border.Effect>
@@ -56,7 +59,7 @@
             </Border.Effect>
             <Grid x:Name="popupuser">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -72,12 +75,33 @@
                     <ColumnDefinition Width="25"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Label Grid.Row="0">Nouvelle réservation</Label>
-                <TextBlock Grid.Row="1" Text="Numéro de réservation"/>
-                <TextBlock Grid.Row="2" Text="{Binding ApointmentNum}"/>
-                <Label Grid.Row="3">Descriptif de la réservation</Label>
+                
+                    <Popup
+                         Width="{Binding ElementName=mainContainer, Path=ActualWidth, Converter={StaticResource PercentageConverter}, ConverterParameter=0.85}"
+                         Height="{Binding ElementName=mainContainer, Path=ActualHeight, Converter={StaticResource PercentageConverter}, ConverterParameter=0.85}"
+                         Placement="Center" 
+                        IsOpen="{Binding IsSelectPatientViewOpen, Mode=TwoWay}"  >
+                        <Grid>
+                        <selectPatientView:SelectPatientView />
+                    </Grid>
+                    </Popup>
 
-                <TextBox Padding="0" Margin="0" Grid.Row="4" Text="{Binding Description}" HorizontalAlignment="Left"
+                <Label Grid.Row="0" FontSize="22" Margin="0 0 0 20" FontWeight="Bold" Content="{Binding TitlePage}"></Label>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="1" Margin="0 0 0 10" Text="Numéro de rendez-vous" FontSize="18" FontWeight="Medium"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" FontSize="14" VerticalAlignment="Center"
+                               FontWeight="Medium"   Text="{Binding ApointmentNum, StringFormat='N°{0}'}"/>
+                </Grid>
+                <Label Grid.Row="3" FontSize="16" FontWeight="Medium"  
+                       HorizontalContentAlignment="Left" 
+                       Padding="0 5">Description du rendez-vous</Label>
+
+                <TextBox Padding="0 " Margin="0" Grid.Row="4" Text="{Binding Description}" HorizontalAlignment="Left"
                           AcceptsReturn="True"
                          TextWrapping="Wrap"
                          Background="#EAEAEA"
@@ -128,14 +152,26 @@
 
                 </Grid>
                 <Grid  Grid.Row="7" Margin="0 0  0 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0">Selected Date</Label>
-                    <Label Grid.Column="1" Content="{Binding SelectedDate, StringFormat='dd MMMM yyyy'}"></Label>
+                    <Label Grid.Column="0" Grid.Row="0" Margin="0 20 0 0"  FontSize="16" 
+                            Padding="0"
+                           HorizontalAlignment="Left"
+                           FontWeight="Medium">Date sélectionnée</Label>
+                    <Label Grid.Column="1" Grid.Row="0"  Content="{Binding SelectedDateString}" FontSize="16" FontWeight="Medium"></Label>
+                    <Label Grid.Column="0" Grid.Row="1" Margin="0" Padding="0"
+                           Content="Heure" FontSize="16" FontWeight="Medium"></Label>
+                    <!-- ComboBox for selecting hours -->
+                    <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Hours}" SelectedItem="{Binding SelectedHour}" />
+                    
                 </Grid>
-                <Grid Grid.Row="9" Margin="0 5">
+                <Grid Grid.Row="9" Margin="0 30 0 0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -166,7 +202,7 @@
                             <materialDesign:PackIcon Kind="NavigateNext" Width="20" Height="20"/>
                         </Button>
                     </StackPanel>
-                    <ItemsControl Grid.Row="2" ItemsSource="{Binding Days}">
+                    <ItemsControl Grid.Row="2"  ItemsSource="{Binding Days}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel Orientation="Horizontal" />
@@ -181,7 +217,8 @@
                                 </Button>-->
                                 <Button  materialDesign:ButtonAssist.CornerRadius="8" Background="White"
                                          Padding="0" Margin="2"
-                                          Width="55" Height="70"
+                                         Width="{Binding ElementName=mainContainer, Path=ActualWidth, Converter={StaticResource PercentageConverter}, ConverterParameter=0.08}"
+                                         Height="{Binding ElementName=mainContainer, Path=ActualHeight, Converter={StaticResource PercentageConverter}, ConverterParameter=0.1}"
                                          Command="{Binding DayClickCommand}"
                                          IsEnabled="{Binding IsEnabled}" >
                                     <Grid>
@@ -190,10 +227,11 @@
                                             <RowDefinition Height="auto"/>
                                         </Grid.RowDefinitions>
                                         <Label Grid.Row="0" Content="{Binding Date.Day}"
-                                           FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                        <Label Grid.Row="1" FontSize="12" 
+                                               FontWeight="Bold"
+                                           FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <Label Grid.Row="1" FontSize="14" 
                                                HorizontalAlignment="Center"
-                                               Content="{Binding Appointmentnumber}" 
+                                               Content="{Binding Appointmentnumber, Converter={StaticResource AppointmentNumberConverter}}" 
                                                ></Label>
                                     </Grid>
                                 </Button>

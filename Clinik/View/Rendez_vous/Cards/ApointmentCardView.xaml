@@ -3,10 +3,57 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Clinik.View.Rendez_vous.Cards"
+             xmlns:local="clr-namespace:Clinik.View.Rendez_vous.Cards" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:ageConverter="clr-namespace:Clinik.Helpers"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="800">
-    <Grid Background="Red" Margin="5"  >
-        <Label HorizontalAlignment="Stretch">pp</Label>
-    </Grid>
+    <UserControl.Resources>
+        <ageConverter:AgeConverter x:Key="AgeConverter" />
+        <ageConverter:DateTimeFormatConverter x:Key="DateTimeFormatConverter" />
+    </UserControl.Resources>
+    <Border Padding="15" Background="White" Margin="5" Cursor="Hand"
+            AllowDrop="True"
+                PreviewMouseLeftButtonDown="Border_PreviewMouseLeftButtonDown"
+               
+                PreviewMouseMove="Border_PreviewMouseMove"
+               
+                BorderThickness="3" BorderBrush="LightGray" CornerRadius="10"
+                 >
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="5" Color="Black" Opacity="0.1" BlurRadius="20"/>
+            </Border.Effect>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Label FontSize="16" FontWeight="DemiBold" Grid.Column="0" HorizontalAlignment="Stretch" Content="{Binding PersonEnst.Fullname}"></Label>
+            <Label FontSize="16" FontWeight="DemiBold" Grid.Column="1" HorizontalAlignment="Stretch" Content="{Binding Age, Converter={StaticResource AgeConverter}}"></Label>
+            <Label FontSize="16" FontWeight="DemiBold" Grid.Column="2" HorizontalAlignment="Stretch" Content="{Binding PatientEnst.Gender}"></Label>
+            <Label FontSize="16" FontWeight="DemiBold" Grid.Column="3" HorizontalAlignment="Stretch" Content="{Binding AppointmentEnst.Date, Converter={StaticResource DateTimeFormatConverter}}"></Label>
+
+            <Label FontSize="16" FontWeight="DemiBold" Grid.Column="4" HorizontalAlignment="Stretch" Content="{Binding PersonEnst.Phone}"></Label>
+
+            <Button Grid.Column="6" Width="40" Height="40" Margin="5 0" materialDesign:ButtonAssist.CornerRadius="50" Background="White"
+                    Command="{Binding AppointmentClicked}" Foreground="Black" Padding="0">
+                <materialDesign:PackIcon Kind="Edit" Width="20" Height="20" Foreground="BlueViolet"/>
+            </Button>
+            <Button Grid.Column="7" Width="40"  Height="40" Padding="0" materialDesign:ButtonAssist.CornerRadius="50" Background="White"
+                    Command="{Binding DeleteClicked}" Foreground="Black">
+                <materialDesign:PackIcon Kind="Delete" Width="20" Height="20" Foreground="Red"/>
+            </Button>
+        </Grid>
+        
+        
+    </Border>
+       
+    
 </UserControl>

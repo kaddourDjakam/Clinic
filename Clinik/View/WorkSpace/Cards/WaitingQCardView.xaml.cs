@@ -1,4 +1,6 @@
-﻿using Clinik.ViewModel.Rendez_vous.Cards;
+﻿using Clinik.View.Rendez_vous.Cards;
+using Clinik.ViewModel.Rendez_vous.Cards;
+using Clinik.ViewModel.WorkSpace.Cards;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,16 +16,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Clinik.View.Rendez_vous.Cards
+namespace Clinik.View.WorkSpace.Cards
 {
     /// <summary>
-    /// Interaction logic for ApointmentCardView.xaml
+    /// Interaction logic for WaitingQCardView.xaml
     /// </summary>
-    public partial class ApointmentCardView : UserControl
+    public partial class WaitingQCardView : UserControl
     {
         private bool isDragging;
         private Point startPoint;
-        public ApointmentCardView()
+        public WaitingQCardView()
         {
             InitializeComponent();
         }
@@ -33,11 +35,11 @@ namespace Clinik.View.Rendez_vous.Cards
 
         private void Border_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            
-                isDragging = true;
-                startPoint = e.GetPosition(null);
-            
-           
+
+            isDragging = true;
+            startPoint = e.GetPosition(null);
+
+
         }
 
         private void Border_PreviewMouseMove(object sender, MouseEventArgs e)
@@ -60,7 +62,7 @@ namespace Clinik.View.Rendez_vous.Cards
         {
             if (sender is Border border)
             {
-                ApointmentCardViewModel viewModel = border.DataContext as ApointmentCardViewModel;
+                WaitingQViewModel viewModel = border.DataContext as WaitingQViewModel;
 
                 if (viewModel != null)
                 {
@@ -72,10 +74,8 @@ namespace Clinik.View.Rendez_vous.Cards
         {
             isDragging = false;
 
-            DataObject data = new DataObject(typeof(ApointmentCardView), this);
+            DataObject data = new DataObject(typeof(WaitingQCardView), this);
             DragDrop.DoDragDrop(border, data, DragDropEffects.Move);
         }
-
-
     }
 }

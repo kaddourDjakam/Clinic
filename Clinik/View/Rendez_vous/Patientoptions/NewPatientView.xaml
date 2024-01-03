@@ -3,10 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Clinik.View.Rendez_vous.Patientoptions"
+             xmlns:local="clr-namespace:Clinik.View.Rendez_vous.Patientoptions" xmlns:percentageConverter="clr-namespace:Clinik.Helpers"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Background="White">
     <UserControl.Resources>
+        <percentageConverter:PercentageConverter x:Key="PercentageConverter"/>
         <Style TargetType="TextBox" x:Key="newRounded" BasedOn="{StaticResource CustmHintedTextBoxStyle}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -42,9 +43,8 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <Grid >
+    <Grid x:Name="newPatient" >
         <Grid.RowDefinitions>
-
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -52,44 +52,70 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <!-- Fullname -->
-        <TextBlock Grid.Row="0" Text="Nom et prénom:"
+        <TextBlock 
+            Grid.Row="0" Text="Nom et prénom:" FontSize="16" FontWeight="DemiBold"
                    VerticalAlignment="Center"/>
-        <TextBox Grid.Row="0" Grid.Column="1" Tag="amir" Text="{Binding Fullname}"
+        <TextBox 
+            HorizontalAlignment="Left"
+           VerticalAlignment="Center"
+            MaxHeight="35" MinHeight="30"
+             Width="{Binding ElementName=newPatient, Path=ActualWidth, Converter={StaticResource PercentageConverter}, ConverterParameter=0.6}"
+             Height="{Binding ElementName=newPatient, Path=ActualHeight, Converter={StaticResource PercentageConverter}, ConverterParameter=0.090}"
+            Grid.Row="0" Grid.Column="1" Tag="amir" Text="{Binding Fullname}"
                  Style="{StaticResource newRounded}"/>
 
         <!-- Phone -->
-        <TextBlock Grid.Row="1" Text="Téléphone:" 
+        <TextBlock Grid.Row="1" Text="Téléphone:" FontSize="16" FontWeight="DemiBold"
                    VerticalAlignment="Center"/>
         <TextBox Grid.Row="1"  Grid.Column="1" Text="{Binding Phone}"
-                 Tag="06 -- -- -- --"  Style="{StaticResource newRounded}"/>
+               HorizontalAlignment="Left"  MaxHeight="35" MinHeight="30"
+             Width="{Binding ElementName=newPatient, Path=ActualWidth, Converter={StaticResource PercentageConverter}, ConverterParameter=0.40}"
+            Height="{Binding ElementName=newPatient, Path=ActualHeight, Converter={StaticResource PercentageConverter}, ConverterParameter=0.090}"
+            Tag="06 -- -- -- --"  Style="{StaticResource newRounded}"/>
 
         <!-- Address -->
-        <TextBlock Grid.Row="2" Text="Adresse:" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="2" Text="Adresse:" FontSize="16" FontWeight="DemiBold" VerticalAlignment="Center"/>
         <TextBox Grid.Row="2"  Grid.Column="1" Text="{Binding Address}"
-                 Tag="20 aout"  Style="{StaticResource newRounded}"/>
+              HorizontalAlignment="Left"   Tag="20 aout"  Style="{StaticResource newRounded}"
+                  MaxHeight="35" MinHeight="30"
+             Width="{Binding ElementName=newPatient, Path=ActualWidth, Converter={StaticResource PercentageConverter}, ConverterParameter=0.40}"
+            Height="{Binding ElementName=newPatient, Path=ActualHeight, Converter={StaticResource PercentageConverter}, ConverterParameter=0.090}"
+           />
 
         <!-- Birthday -->
-        <TextBlock Grid.Row="3" Text="Date de naissance:" VerticalAlignment="Center"/>
-        <Grid Grid.Row="3" HorizontalAlignment="Left"  Grid.Column="1">
+        <TextBlock Grid.Row="3" Text="Date de naissance:" FontSize="16" FontWeight="DemiBold" VerticalAlignment="Center"/>
+        <Grid  Grid.Row="3" HorizontalAlignment="Left"  Grid.Column="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBox Width="40" Tag="24" Text="{Binding BirthdayDay}"
-                     Grid.Column="0" Margin="0,0,5,0"  Style="{StaticResource newRounded}" />
-            <TextBox Width="40" Tag="02" Text="{Binding BirthdayMonth}"
-                     Grid.Column="1" Margin="0,0,5,0"  Style="{StaticResource newRounded}" />
-            <TextBox Width="50" Tag="1995" Text="{Binding BirthdayYear}"
+            <TextBox Tag="24" Text="{Binding BirthdayDay}" 
+                     Grid.Column="0"  Style="{StaticResource newRounded}"
+                      MaxHeight="35" MinHeight="30"
+             Width="{Binding ElementName=newPatient, Path=ActualWidth, Converter={StaticResource PercentageConverter}, ConverterParameter=0.15}"
+            Height="{Binding ElementName=newPatient, Path=ActualHeight, Converter={StaticResource PercentageConverter}, ConverterParameter=0.090}"
+           />
+            <TextBox  Tag="02" Text="{Binding BirthdayMonth}"
+                     Grid.Column="1" Margin="5,0,5,0"  Style="{StaticResource newRounded}"
+                       MaxHeight="35" MinHeight="30"
+             Width="{Binding ElementName=newPatient, Path=ActualWidth, Converter={StaticResource PercentageConverter}, ConverterParameter=0.15}"
+            Height="{Binding ElementName=newPatient, Path=ActualHeight, Converter={StaticResource PercentageConverter}, ConverterParameter=0.090}"
+           />
+            <TextBox  Tag="1995" Text="{Binding BirthdayYear}"
+                       MaxHeight="35" MinHeight="30"
+             Width="{Binding ElementName=newPatient, Path=ActualWidth, Converter={StaticResource PercentageConverter}, ConverterParameter=0.15}"
+            Height="{Binding ElementName=newPatient, Path=ActualHeight, Converter={StaticResource PercentageConverter}, ConverterParameter=0.090}"
+           
                      Grid.Column="2" Margin="0,0,5,0"  Style="{StaticResource newRounded}"/>
         </Grid>
 
         <!-- Gender -->
-        <TextBlock Grid.Row="4" Text="Genre:" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+        <TextBlock Grid.Row="4" Text="Genre:" FontSize="16" FontWeight="DemiBold" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
         <ComboBox Grid.Row="4" Grid.Column="1"  ItemsSource="{Binding Genders}" SelectedItem="{Binding SelectedGender}" />
 
 

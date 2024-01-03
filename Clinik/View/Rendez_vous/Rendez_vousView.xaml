@@ -6,10 +6,48 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Clinik.View.Rendez_vous"
              xmlns:apointmentCardView="clr-namespace:Clinik.View.Rendez_vous.Cards" 
-             xmlns:newApointmentView="clr-namespace:Clinik.View.Rendez_vous.NewAppoinmtment"
-             mc:Ignorable="d" 
+             xmlns:newApointmentView="clr-namespace:Clinik.View.Rendez_vous.NewAppoinmtment" xmlns:percentageConverter="clr-namespace:Clinik.Helpers"
+             mc:Ignorable="d" Background="White"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
+        <percentageConverter:PercentageConverter x:Key="PercentageConverter"/>
+        <percentageConverter:DateTimeFormatConverter x:Key="DateTimeFormatConverter" />
+            <Style TargetType="TextBox" x:Key="newRounded" BasedOn="{StaticResource CustmHintedTextBoxStyle}">
+                
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TextBox">
+                            <Border x:Name="Border"
+                                    Background="{TemplateBinding Background}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="6" 
+                            Padding="5 3 0 0"
+                                    Margin="1"
+                                    SnapsToDevicePixels="True">
+                                <Grid>
+                                    <TextBlock x:Name="HintTextBlock"
+                                               Text="{TemplateBinding Tag}"
+                                               Foreground="Gray"
+                                               Visibility="Collapsed"
+                                               Padding="0 1 0 0"
+                                               Margin="3,0,0,0" />
+                                    <ScrollViewer x:Name="PART_ContentHost" />
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                    <Setter TargetName="Border" Property="BorderBrush" Value="#673AB7" />
+                                    <Setter TargetName="Border" Property="BorderThickness" Value="1.5" />
+                                </Trigger>
+                                <Trigger Property="Text" Value="">
+                                    <Setter TargetName="HintTextBlock" Property="Visibility" Value="Visible" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
         <Style x:Key="ScrollBarTrackThumb"
         TargetType="{x:Type Thumb}">
             <Setter Property="Template">
@@ -45,6 +83,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
     </UserControl.Resources>
     <Grid x:Name="parentControl">
        
@@ -53,7 +92,7 @@
             <RowDefinition Height="80"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Label Grid.Row="0" >hello</Label>
+        <Label Grid.Row="0" FontSize="28" FontWeight="Bold"  >Gestion des rendez-vous</Label>
 
         <Popup
              Width="{Binding ElementName=parentControl, Path=ActualWidth}" 
@@ -64,21 +103,73 @@
                 <newApointmentView:NewApointmentView/>
             </Grid>
         </Popup>
-        <Grid Grid.Row="1" >
+        <Grid Grid.Row="1" Margin="10 0" x:Name="optionsBar" >
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <Button 
-                Grid.Column="2" 
+                Grid.Column="7" 
                 Command="{Binding NewAppointment_Cmd}" Cursor="Hand"
-                HorizontalAlignment="Center" Margin="0"  HorizontalContentAlignment="Center"
+                HorizontalAlignment="Center" Margin="5 0"  HorizontalContentAlignment="Center"
                 FontSize="12"
                 materialDesign:ButtonAssist.CornerRadius="5">
                 <StackPanel Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="AddBox" VerticalAlignment="Center" Width="20" Height="20" />
                     <TextBlock Text="Rendez-vous" Margin="5 0 0 0" VerticalAlignment="Center" FontSize="14" />
+                </StackPanel>
+            </Button>
+            <TextBox   Grid.Column="0" Text="{Binding SearchString}"
+              HorizontalAlignment="Left"   Tag="recherche"  Style="{StaticResource newRounded}"
+                  MaxHeight="35" MinHeight="30"
+             Width="{Binding ElementName=optionsBar, Path=ActualWidth, Converter={StaticResource PercentageConverter}, ConverterParameter=0.25}"
+            Height="{Binding ElementName=optionsBar, Path=ActualHeight, Converter={StaticResource PercentageConverter}, ConverterParameter=1}"
+           />
+            <!-- DateTimePicker -->
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <Grid  VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Text="{Binding SelectedFilterDate, StringFormat='dd MMMM yyyy'}" FontSize="18" IsReadOnly="True" Margin="5 0"   VerticalAlignment="Center"/>
+                    <Button Click="OpenCalendar_Click" Grid.Column="1" VerticalAlignment="Bottom" Margin="0" Padding="0" Background="Transparent" BorderBrush="Transparent">
+                        <materialDesign:PackIcon Kind="Calendar" VerticalAlignment="Center" Width="30" Height="30" Foreground="Black" />
+                    </Button>
+                    <Popup x:Name="calendarPopup" PlacementTarget="{Binding ElementName=OpenCalendar}" Placement="Bottom" StaysOpen="False">
+                        <Calendar SelectedDate="{Binding SelectedFilterDate, Mode=TwoWay}" SelectedDatesChanged="Calendar_SelectedDateChanged" />
+                    </Popup>
+                </Grid>
+
+               
+            </StackPanel>
+            <Button 
+                Grid.Column="2" Width="auto" Margin="5 0"
+                Command="{Binding ApplyFilter_Cmd}" Cursor="Hand"
+                HorizontalAlignment="Center"   HorizontalContentAlignment="Center"
+                FontSize="12" 
+                materialDesign:ButtonAssist.CornerRadius="5">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="CheckBold" VerticalAlignment="Center" Width="20" Height="20" />
+                    <TextBlock Text="Appliquer" Margin="5 0 0 0" VerticalAlignment="Center" FontSize="14" />
+                </StackPanel>
+            </Button>
+            <Button 
+                Grid.Column="3"  Width="auto"
+                Command="{Binding RemoveFilter_Cmd}" Cursor="Hand"
+                HorizontalAlignment="Center"   HorizontalContentAlignment="Center"
+                FontSize="12" Margin="5 0" Padding="5 0"
+                materialDesign:ButtonAssist.CornerRadius="5">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="Cancel" VerticalAlignment="Center" Width="20" Height="20" />
+                    <TextBlock Text="Retirer" Margin="5 0 0 0" VerticalAlignment="Center" FontSize="14" />
                 </StackPanel>
             </Button>
         </Grid>
@@ -94,7 +185,7 @@
                     <!-- Apply the ScrollBar style to the ScrollBar -->
                     <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource {x:Type ScrollBar}}" />
                 </ScrollViewer.Resources>
-                <ItemsControl ItemsSource="{Binding People, UpdateSourceTrigger=PropertyChanged}" >
+                <ItemsControl ItemsSource="{Binding Appointments, UpdateSourceTrigger=PropertyChanged}" >
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel  Orientation="Vertical"
@@ -103,7 +194,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <apointmentCardView:ApointmentCardView />
+                            <apointmentCardView:ApointmentCardView DataContext="{Binding}" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

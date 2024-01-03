@@ -6,7 +6,92 @@
              xmlns:local="clr-namespace:Clinik.View.Rendez_vous.Patientoptions"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="Aqua">
-        <Label>ListPatient</Label>
+    <UserControl.Resources>
+        <Style TargetType="TextBox" x:Key="newRounded" BasedOn="{StaticResource CustmHintedTextBoxStyle}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="Border"
+                                    Background="{TemplateBinding Background}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="6" 
+                            Padding="5 3 0 0"
+                                    Margin="1"
+                                    SnapsToDevicePixels="True">
+                            <Grid>
+                                <TextBlock x:Name="HintTextBlock"
+                                               Text="{TemplateBinding Tag}"
+                                               Foreground="Gray"
+                                               Visibility="Collapsed"
+                                               Padding="0 1 0 0"
+                                               Margin="3,0,0,0" />
+                                <ScrollViewer x:Name="PART_ContentHost" />
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#673AB7" />
+                                <Setter TargetName="Border" Property="BorderThickness" Value="1.5" />
+                            </Trigger>
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="HintTextBlock" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid >
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <!-- Fullname -->
+        <TextBlock Grid.Row="0" Text="Nom et prénom:"
+                   VerticalAlignment="Center"/>
+        <TextBox Grid.Row="0" IsEnabled="False" Grid.Column="1" Tag="amir" Text="{Binding CurrentPerson.Fullname}"
+                 Style="{StaticResource newRounded}"/>
+
+        <!-- Phone -->
+        <TextBlock Grid.Row="1" Text="Téléphone:" 
+                   VerticalAlignment="Center"/>
+        <TextBox Grid.Row="1" IsEnabled="False" Grid.Column="1" Text="{Binding CurrentPerson.Phone}"
+                 Tag="06 -- -- -- --"  Style="{StaticResource newRounded}"/>
+
+        <!-- Address -->
+        <TextBlock Grid.Row="2" Text="Adresse:" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="2" IsEnabled="False" Grid.Column="1" Text="{Binding CurrentPerson.Adress}"
+                 Tag="20 aout"  Style="{StaticResource newRounded}"/>
+
+        <!-- Birthday -->
+        <TextBlock Grid.Row="3" Text="Date de naissance:" VerticalAlignment="Center"/>
+        <Grid Grid.Row="3" HorizontalAlignment="Left"  Grid.Column="1" IsEnabled="False">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Width="40" Tag="24" Text="{Binding CurrentPatient.Birthday.Day ,Mode=OneTime}" 
+                     Grid.Column="0" Margin="0,0,5,0"  Style="{StaticResource newRounded}" />
+            <TextBox Width="40" Tag="02" Text="{Binding CurrentPatient.Birthday.Month, Mode=OneTime}"
+                     Grid.Column="1" Margin="0,0,5,0"  Style="{StaticResource newRounded}" />
+            <TextBox Width="50" Tag="1995" Text="{Binding CurrentPatient.Birthday.Year, Mode=OneTime}"
+                     Grid.Column="2" Margin="0,0,5,0"  Style="{StaticResource newRounded}"/>
+        </Grid>
+
+        <!-- Gender -->
+        <TextBlock Grid.Row="4" Text="Genre:" IsEnabled="False" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+        <TextBlock Grid.Row="4" Grid.Column="1" Padding="0" Margin="0" VerticalAlignment="Center"   IsEnabled="False" Text="{Binding CurrentPatient.Gender}" />
+
+
     </Grid>
 </UserControl>
